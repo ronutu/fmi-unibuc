@@ -17,4 +17,4 @@
 | 2  | Analiză matematică II  |
 | 3  | Geometrie II  |
 | 4  | Elemente de calcul științific  |
-| 6  | Logică matematică  |
+| 5  | Logică matematică  |
