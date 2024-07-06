@@ -6,3 +6,7 @@ Anul I - Semestrul I
 | ------------- | ------------- |
 | 1  | Algebră liniară  |
 | 2  | Algebră I  |
+| 3  | Analiză matematică I  |
+| 4  | Geometrie I  |
+| 5  | Programare procedurală  |
+| 6  | Gândire critică și etică academică  |
