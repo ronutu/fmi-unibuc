@@ -1,7 +1,6 @@
 # Domeniul Matematică
-## Specializarea Matematică-Informatică
-### 2021 - 2024
-Anul I - Semestrul I
+## Specializarea Matematică-Informatică (2021 - 2024)
+### Anul I - Semestrul I
 | Nr. Crt.  | Discipline |
 | ------------- | ------------- |
 | 1  | Algebră liniară  |
@@ -11,7 +10,7 @@ Anul I - Semestrul I
 | 5  | Programare procedurală  |
 | 6  | Gândire critică și etică academică  |
 
-Anul I - Semestrul II
+### Anul I - Semestrul II
 | Nr. Crt.  | Discipline |
 | ------------- | ------------- |
 | 1  | Algebră II  |
