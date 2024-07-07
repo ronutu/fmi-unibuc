@@ -18,3 +18,14 @@
 | 3  | Geometrie II  |
 | 4  | Elemente de calcul științific  |
 | 5  | Logică matematică  |
+
+### Anul II - Semestrul I
+| Nr. Crt.  | Discipline |
+| ------------- | ------------- |
+| 1  | Algebră III  |
+| 2  | Teoria măsurii și a integrării (TMI)  |
+| 3  | Geometrie diferențială I |
+| 4  | Ecuații diferențiale  |
+| 5  | Sisteme de operare  |
+| 6  | Programare orientată pe obiecte (POO)  |
+
