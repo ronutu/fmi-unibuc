@@ -1,6 +1,6 @@
 # Domeniul Matematică
 ## Specializarea Matematică-Informatică (2021 - 2024)
-### Anul I - Semestrul I
+### Anul I
 | Nr. Crt.  | Discipline |
 | ------------- | ------------- |
 | 1  | Algebră I  |
@@ -9,17 +9,13 @@
 | 4  | Gândire critică și etică academică  |
 | 5  | Geometrie I  |
 | 6  | Programare procedurală (PP)  |
+| 7  | Algebră II  |
+| 8  | Analiză matematică II  |
+| 9  | Elemente de calcul științific (ECS)  |
+| 10  | Geometrie II  |
+| 11  | Logică matematică  |
 
-### Anul I - Semestrul II
-| Nr. Crt.  | Discipline |
-| ------------- | ------------- |
-| 1  | Algebră II  |
-| 2  | Analiză matematică II  |
-| 3  | Elemente de calcul științific (ECS)  |
-| 4  | Geometrie II  |
-| 5  | Logică matematică  |
-
-### Anul II - Semestrul I
+### Anul II
 | Nr. Crt.  | Discipline |
 | ------------- | ------------- |
 | 1  | Algebră III  |
@@ -28,18 +24,14 @@
 | 4  | Programare orientată pe obiecte (POO)  |
 | 5  | Sisteme de operare (SO)  |
 | 6  | Teoria măsurii și a integrării (TMI)  |
+| 7  | Algebră IV  |
+| 8  | Analiză Complexă (AC)  |
+| 9  | Baze de date (BD)  |
+| 10  | Probabilități |
+| 11 | Structuri de date (SD)  |
+| 12 | Tehnici WEB  |
 
-### Anul II - Semestrul II
-| Nr. Crt.  | Discipline |
-| ------------- | ------------- |
-| 1  | Algebră IV  |
-| 2  | Analiză Complexă (AC)  |
-| 3  | Baze de date (BD)  |
-| 4  | Probabilități |
-| 5  | Structuri de date (SD)  |
-| 6  | Tehnici WEB  |
-
-### Anul III - Semestrul I
+### Anul III
 | Nr. Crt.  | Discipline |
 | ------------- | ------------- |
 | 1  | Analiză numerică și metode numerice |
@@ -48,15 +40,11 @@
 | 4  | Elemenete de analiză clasică (EAC I)  |
 | 5  | Statistică  |
 | 6  | Robotic Process Automation (RPA)  |
-
-### Anul III - Semestrul II
-| Nr. Crt.  | Discipline |
-| ------------- | ------------- |
-| 1  | Elemenete de analiză clasică (EAC II)  |
-| 2  | Elemente de securitate și logică aplicată (ESLA) |
-| 3  | Metode formale în ingineria software  |
-| 4  | Programarea aplicațiilor în NodeJS  |
-| 5  | Teoria numerelor cu aplicații în criptografie (TN)  |
-| 6  | Testarea sistemelor software (TSS)  |
+| 7  | Elemenete de analiză clasică (EAC II)  |
+| 8  | Elemente de securitate și logică aplicată (ESLA) |
+| 9  | Metode formale în ingineria software  |
+| 10  | Programarea aplicațiilor în NodeJS  |
+| 11 | Teoria numerelor cu aplicații în criptografie (TN)  |
+| 12 | Testarea sistemelor software (TSS)  |
 
 
