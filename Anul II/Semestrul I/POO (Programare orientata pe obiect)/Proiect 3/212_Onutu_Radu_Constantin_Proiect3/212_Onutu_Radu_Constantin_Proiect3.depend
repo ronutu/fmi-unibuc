@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1672750262 source:d:\a_fac\an ii\sem i\poo\proiect 3\212_onutu_radu_constantin_proiect3\main.cpp
+	<iostream>
+	<vector>
+	<set>
+	<list>
+	<map>
+

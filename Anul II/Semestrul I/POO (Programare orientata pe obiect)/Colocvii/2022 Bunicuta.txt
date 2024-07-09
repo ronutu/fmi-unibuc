@@ -1,0 +1,37 @@
+O bunicuta vrea sa faca prajituri pentru aniversarea nepotului sau. Prajiturile pot fi
+de 3 feluri: cele care au la baza: 
+- un patrat
+- un cerc
+- un triunghi
+
+Fiecare tip de prajitura are o latura/raza si o inaltime. In plus, prajiturile care au patrat la baza 
+mai au in plus faptul ca poti sa pui dulciuri pe ele sau nu; prajiturile care au un cerc la baza 
+mai au in plus un string de culoare; prajiturile care au un triunghi la baza mai au in plus
+un int de pret. Aceasta vrea sa afle volumul fiecarei prajituri(piramida patrulatera, con, piramida triunghiulare)
+ca sa stie de cate ingrediente are nevoie.
+
+Bunicuta doreste sa faca pachete pentru a imparti prajiturile. Astfel, pentru un pachet, ea
+are nevoie de: nume, adresa si o lista de prajituri.
+
+
+Astfel, programul are un meniu de accesare care îi permite utilizatorului să opteze între:
+1. Adaugarea unei prajituri cu baza patrat
+2. Adaugarea unei prajituri cu baza cerc
+3. Adaugarea unei prajituri cu baza triunghi
+4. Afisarea tuturor prajiturilor
+5. Adaugarea unui pachet
+6. Afisarea tuturor pachetelor
+
+Conditiile minime pt promovoare sunt de a rula codul de mai jos:
+Patrat a;
+Cerc b;
+Triunghi c;
+cin>>a>>b>>c;
+cout<<a<<b<<c;
+Prajitura* list[3];
+list[0]=new Patrat();
+list[1]=new Cerc();
+list[2]=new Triunghi();
+for(int i=0; i<3; i++)
+list[i]-> Volum();
+Pachet p(“Radu”, ”Aleea Cupolei”, ["Cerc", "Patrat"]);
