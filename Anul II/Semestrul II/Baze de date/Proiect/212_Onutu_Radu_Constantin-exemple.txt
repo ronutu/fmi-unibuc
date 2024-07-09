@@ -1,0 +1,78 @@
+-- cerere in care folosesc 5 tabele si folosesc clauza FROM
+-- afiseaza cati angajati are o pizzerie
+SELECT p.nume nume_pizzerie, COUNT(*) numar_angajati
+FROM pizzerie p JOIN departament d
+    ON p.id_pizzerie = p.id_pizzerie
+    JOIN DEPARTAMENT_ECHIPA_MAPPING de 
+    ON d.id_departament = de.id_departament
+    JOIN ECHIPA e
+    ON de.id_echipa = e.id_echipa
+    JOIN angajat a ON
+    e.id_angajat = a.id_angajat
+WHERE p.nume LIKE 'Pizzarella'
+GROUP BY p.nume;
+
+-- cerere care contine UPPER, LOWER
+-- scrie cu majuscule numele pizzeriilor so cu litere mici numele patronilor
+SELECT
+  CONCAT('Pizzeria ', UPPER(p.nume)) nume_pizzerie,
+  CONCAT('Patronul ', LOWER(pa.nume)) nume_patron
+FROM
+  PIZZERIE p
+JOIN PATRON pa ON p.id_pizzerie = pa.id_pizzerie;
+
+-- cerere care contine functie pe date calendaristice
+-- afiseaza ziua si luna curenta
+SELECT P.*, EXTRACT(DAY FROM CURRENT_DATE) ZiuaCurenta, TO_CHAR(CURRENT_DATE, 'Month') LunaCurenta
+FROM PIZZERIE P;
+
+-- cerere care foloseste nvl si decode
+-- afiseaza angajatii si ii filtreaza in functie de varsta
+SELECT a.nume nume_angajat, a.varsta,
+       NVL(a.sex, 'Necunoscut') AS sex_angajat,
+       DECODE(SIGN(a.varsta - 30), -1, 'Tanar', SIGN(a.varsta - 50), 'Matur', 'In Varsta') categorie_varsta
+FROM angajat a
+ORDER BY a.nume;
+
+-- cerere care foloseste with si case
+-- filtreaza preturile si spune daca sunt scumpe sau ieftine
+WITH cte AS (
+  SELECT
+    m.id_meniu, m.denumire, m.pret, p.nume
+  FROM
+    MENIU m
+    INNER JOIN PIZZERIE p ON m.id_pizzerie = p.id_pizzerie
+  ORDER BY
+    m.pret DESC
+)
+SELECT
+  id_meniu, denumire, pret, nume,
+  CASE
+    WHEN pret >= 50 THEN 'Scump'
+    WHEN pret >= 30 THEN 'Ieftin'
+    ELSE 'Ieftin'
+  END AS price_category
+FROM
+  cte
+ORDER BY
+  pret DESC;
+
+
+
+UPDATE MENIU
+SET pret = (
+    SELECT pret + 5
+    FROM MENIU
+    WHERE id_meniu = 12
+)
+WHERE id_meniu = 12;
+
+UPDATE PIZZERIE
+SET nume = (
+    SELECT CONCAT(nume, ' Restaurant')
+    FROM PIZZERIE
+    WHERE id_pizzerie = 6
+)
+WHERE id_pizzerie = 6;
+
+DELETE FROM MENIU WHERE id_meniu = 31;
