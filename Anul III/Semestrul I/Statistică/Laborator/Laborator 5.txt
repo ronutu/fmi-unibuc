@@ -1,0 +1,75 @@
+title: "Lab5"
+output: html_document
+date: "2022-11-03"
+---
+
+## Ex1
+
+fuctia sample #ne permita sa esantionam -adica extragem dintr-o multe un anumit nr de elem
+```{r}
+sample(1:6, 3) #extragere fara intoarcere
+sample(1:49,51,replace=TRUE) #extragere cu intoarcere
+sample(1:6,6,replace=TRUE) #aruncare cu zarul
+
+#aruncatul cu banul
+sample(c("H","T"),10,replace=TRUE) #aruncam cu banul de 10 ori
+ban <- sample(c("H","T"),10000,replace=TRUE)
+#ban <- sample(c("H","T"),10000,replace=TRUE, prob=c(0.3,0.7)) # aruncam cu banul de 10000 ori, dar probabilitatea lui H e de 0.3 si T e de 0.7
+
+sum(ban == "H")/length(ban) #de cate ori apare H in cele 10000 aruncari/lungimea banului - arata de cate ori apare H in proportie relativa
+
+table(ban)/length(ban) #arata de cate ori apare H, si apoi T
+
+#un prim grafic
+x <- cumsum(ban == "H")/(1:length(ban)) #suma cumulativa, x1/1, x1+x2/2 etc
+
+plot(1:length(ban),x,
+     type="o", #tipul de linie al graficului
+     col="darkgreen", #culoarea
+     bty="n") 
+
+abline(h=0.5, lty=2,
+       col= "red")
+
+```
+Cum rezolvam problema cu copiii?
+```{r}
+N<-10^5 #nr de familii
+copil1 <-sample(c("B","F"),N,replace=TRUE) #sexul primului copil in cele N familii
+copil2 <- sample(c("B","F"),N,replace=TRUE) #sexul copil 2 in cele N familii
+#A - copilul cel mare e F
+#B- un copil e F
+#E-cei doi copii sunt de sex F
+
+nA <- sum(copil1 == "F") #primul nascut e F
+nAE <- sum(copil1=="F" & copil2 =  "F") #ambii copii sunt F
+
+nAE/nA #1/2
+
+nB <- sum(copil1 == "F" | copil2 == "F") #unul din copii e F
+
+nAE/nB #1/3
+
+
+```
+##Ex 2
+```{r}
+nr_extrase <- c(23,6,19,48,1,29) #s-au extras aceste nr la lotto
+#care e prob sa pierdem la lotto (ca jucator)? adica am nimerit fie 1 nr, fie 2 nr
+N <- 100000 #sunt inscrise N bilete
+
+for(i in 1:N){
+  bilet <- sample(1:49,6) #exragerea e fara intoarcere - nr extrase trb sa fie unice
+  raspuns[i] <- sum(nr_extrase%in%bilet) #intoarce cate nr extrase sunt nr de pe biletul meu
+
+}
+#for-ul intoarce biletele in nr de N
+
+sum(raspuns < 3)/N #bilete castigatoare/ N -> frecventa biletelor pierzatoare
+table(raspuns)/N #la fel ca la randul de mai sus doar ca pt toate biletele care au nimerit un nr,..., biletele care au nimerit cele 6 nr.
+bilet <- sample(1:49,6) #exragerea e fara intoarcere - nr extrase trb sa fie unice
+#deci cate nr extrase se regasec pe biletul meu
+#nr_extrase%in%bilet #intoarce true daca se regaseste nr respectiv, false altfel
+sum(nr_extrase%in%bilet) #intoarce cate nr extrase sunt nr de pe biletul meu
+
+```

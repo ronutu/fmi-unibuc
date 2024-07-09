@@ -1,0 +1,563 @@
+---
+title: "Proiect statistica"
+subtitle: Mihalcea Andrei, Morariu Medeea (Grupa 301)
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Problema 1
+
+## Procedura 1
+
+### Conditia ca lungimile celor 3 segmente sa poata forma triunghi
+
+Pentru implicația de la stânga la dreapta presupunem că $a,b,c$ pot forma un triunghi și demonstrăm că toate sunt mai mici decât $\dfrac{1}{2}$.\\Presupunem prin absurd că $a$ e mai mare decât $\frac{1}{2}$.
+
+
+
+```{r}
+
+procedura_1 <- function(N){
+  
+x <- runif(N)
+y <- runif(N)
+return(list(x, y))
+}
+
+#2
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+A <- c()
+B <- c()
+C <- c()
+for (i in 1:5000){
+  A <- c(A, min(x[i], y[i]))
+  B <- c(B, abs(x[i] - y[i]))
+  C <- c(C, 1 - max(x[i], y[i]))
+}
+
+mean(A)
+mean(B)
+mean(C)
+
+
+```
+
+```{r}
+#3 a
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+xt <- c()
+yt <- c()
+
+xn <- c()
+yn <- c()
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i])
+    yt <- c(yt, y[i])
+  }
+  else{
+    xn <- c(xn, x[i])
+    yn <- c(yn, y[i])
+  }
+    
+}
+
+plot(xt, yt, pch = 19, col = "blue", xlab = "x", ylab = "y", xlim = c(0,1), ylim = c(0,1))
+points(xn, yn, pch = 19, col = "red")
+
+
+```
+
+```{r}
+#3 b
+p <- length(xt) / 5000
+
+p
+```
+
+```{r}
+#4
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+
+xo <- c()
+yo <- c()
+
+xb <- c()
+yb <- c()
+for (i in 1:5000)
+{
+  v <- sort(c(min(x[i], y[i]), abs(x[i] - y[i]), 1 - max(x[i], y[i])))
+  a = v[1]
+  b = v[2]
+  c = v[3]
+  if(a<1/2 && b < 1/2 && c < 1/2 && (a^2 + b^2 - c^2) / (2 * a * b) < 0){
+    xo <- c(xo, x[i])
+    yo <- c(yo, y[i])
+  }
+  else{
+    xb <- c(xb, x[i])
+    yb <- c(yb, y[i])
+  }
+    
+}
+
+plot(xo, yo, pch = 19, col = "blue", xlab = "x", ylab = "y")
+points(xb, yb, pch = 19, col = "red")
+length(xo)/5000
+```
+
+
+```{r}
+procedura_2 <- function(N){
+  
+x <- runif(N)
+z <- runif(N)
+y <- c()
+for (i in 1:N){
+  if (x[i] < 1/2){
+    y <- c(y, x[i] + (1-x[i])*z[i])
+  }
+  else{
+    y <- c(y, x[i]*z[i])
+  }
+}
+
+return(list(x, y, z))
+}
+
+
+```
+
+
+```{r}
+#5
+L = procedura_2(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+z = unlist(L[3])
+xt <- c()
+zt <- c()
+
+xn <- c()
+zn <- c()
+
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i])
+    zt <- c(zt, z[i])
+  }
+  else{
+    xn <- c(xn, x[i])
+    zn <- c(zn, z[i])
+  }
+
+}
+p = length(xt) / 5000
+p
+
+
+
+plot(xt, zt, pch = 19, col = "blue", xlab = "x", ylab = "y", main = "Procedura 2")
+points(xn, zn, pch = 19, col = "red")
+
+```
+
+
+```{r}
+procedura_3 <- function(N){
+  
+x <- runif(N)
+z <- runif(N)
+y <- c()
+for (i in 1:N){
+  if (z[i] < 1/2){
+    y <- c(y, x[i] + (1-x[i])*2*z[i])
+  }
+  else{
+    y <- c(y, x[i]*(2*z[i] - 1))
+  }
+}
+return(list(x, y, z))
+}
+procedura_3(10)
+
+```
+
+
+
+
+```{r}
+L = procedura_3(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+z = unlist(L[3])
+xt <- c()
+zt <- c()
+
+xn <- c()
+zn <- c()
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i])
+    zt <- c(zt, z[i])
+  }
+  else {
+    xn <- c(xn, x[i])
+    zn <- c(zn, z[i])
+  }
+
+}
+p = length(xt) / 50
+p
+
+
+plot(xt, zt, pch = 19, col = "blue", xlab = "x", ylab = "y", xlim = c(0,1), ylim = c(0,1), main = "Procedura 3")
+points(xn, zn, pch = 19, col = "red")
+
+```
+
+
+Pentru a  simula din repartițiile f1 și f2, vom utiliza metoda respingerii pe f1tilda si f2tilda, 
+
+
+```{r}
+normale<-function (m1, s1, m2, s2)
+{
+  X1 <- rnorm(1, m1, s1)
+  X2 <- rnorm(1, m2, s2)
+  return(list(X1, X2))
+}
+```
+
+```{r}
+f1t <-  function(x1, x2){
+  if(abs(x2) <= 1){
+    return(exp(-0.5*(x1^2/4 + x2^2)))
+  } 
+  else{
+    return(0)
+  }
+}
+
+f2t <- function(y1, y2){
+  return((((cos(y1))^2 + 1/2 * (sin(3*y2)))^2 * (cos(y1))^4) * exp(-0.5*(y1^2/4 + y2^2)))
+}
+
+g <- function(x, y){
+  return(1/(4*pi)*exp(- 1/2 *(x^2/4+y^2)))
+}
+
+
+sim1 <- function(n){
+  
+  x <- rep(0, n)
+  y <- rep(0, n)
+  
+  m <- 0
+  while(m<=n){
+    
+    x[m]<- rnorm(1, 0, 1)
+    y[m] <- rnorm(1, 0, 4)
+    
+    #gen u
+    u <- runif(1)
+    
+    #verificam cond
+    if(u <= f1t(x[m], y[m]) / 4 * pi * g(x[m], y[m])){
+      m <- m+1
+    }
+  }
+  return(list(x, y))
+}
+
+
+simresp1 <-  function(n){
+  x <-  rep(0, n)
+  y <-  rep(0, n)
+  
+  for (i in 1:n){
+    # generam obs din g
+    g <- rbvn(0,2,0,1,0)
+    x[i] = g[1]
+    y[i] = g[2]
+    # generam uniforma
+    u = runif(1)
+    while(u > 1/(4*pi) * f1t(x[i], y[i]) / bvnpdf(2, 1, x[i], y[i])){
+      g <- rbvn(0,2,0,1,0)
+      x[i] = g[1]
+      y[i] = g[2] 
+      u = runif(1)
+    }
+  }
+  cbind(x, y)
+}
+
+f1x1 <- function(x){
+  return(1/sqrt(8*pi)*exp(-x^2/8))
+}
+
+g <- function(x){
+  exp(-x^2/2)
+}
+
+f1x2 <- function(y){
+  ifelse(abs(y) <= 1, 1/1.711249*exp(-y^2/2), 0)
+}
+
+
+```
+
+
+
+```{r}
+f1 <-  function(x1, x2){
+  if(abs(x2) <= 1){
+    return(exp(-1/2 *(x1^2/4 + x2^2)))
+  } 
+  else{
+    return(0)
+  }
+}
+
+f2 <- function(y1, y2){
+  return((((cos(y1))^2 + 1/2 * (sin(3*y2)))^2 * (cos(y1))^4) * exp(-0.5*(y1^2/4 + y2^2)))
+}
+
+g <- function(x1,x2){
+
+  return(1/(4*pi)*exp(-1/2*(x1^2/4 +x2^2)))
+}
+
+
+sim1 <- function(n){
+  
+  x <- rep(0, n)
+  y <- rep(0, n)
+  
+  for (i in 1:n){
+    
+    x[i] <- rnorm(1, 0, 2)
+    y[i] <- rnorm(1, 0, 1)
+    
+    #gen u
+    u <- runif(1)
+    
+    #verificam cond
+    while(u > 1/(4*pi) * f1(x[i], y[i]) / g(x[i], y[i])){
+        x[i] <- rnorm(1, 0, 2)
+        y[i] <- rnorm(1, 0, 1)
+        u <- runif(1, 0, 1)
+    
+    }
+  }
+  return(cbind(x, y))
+}
+
+sim_1 = function(n){
+  K1 = vector()
+  K2 = vector()
+  M1 = 4*pi
+  for (i in 1:n){
+    X1 = rnorm(1,0,2)
+    X2 = rnorm(1,0,1) 
+    u = runif(1,0,1)
+    if (M1*g(X1,X2)*u <=f1(X1,X2)){
+      K1[i] = X1
+      K2[i] = X2
+    }
+  }
+  return(cbind(K1,K2)) #returnăm datele K1,K2
+}
+sim2 <- function(n){
+  x <- rep(0, n)
+  y <- rep(0, n)
+  
+  m<-1
+  while(m<=n){
+    
+    x[m] <- rnorm(1, 0, 2)
+    y[m] <- rnorm(1, 0, 1)
+    
+    #gen u
+    u <- runif(1)
+    
+    #verificam cond
+    if(u <= f2(x[m], y[m]) / (6 * pi * g(x[m], y[m]))){
+      m <- m+1
+    }
+  }
+  return(cbind(x, y))
+  
+}
+E1 = sim1(100000)
+E2 = sim2(100000)
+
+f11 <- function(x){
+  return(1/sqrt(8*pi)*exp(-x^2/8))
+}
+
+
+f12 <- function(y){
+  ifelse(abs(y) <= 1, 1/1.711249*exp(-y^2/2), 0)
+}
+
+X <- E1[,1]
+hist(X, freq = FALSE,
+     col="gray80",
+     border="gray20",
+     main = "Densitatea marginala f1,1", xlim=c(-10,10), ylim=c(0,0.25), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f11(x),
+      from = -10,
+      to = 10,
+      ylab = "",
+      main = "f1x1",
+      add = TRUE,
+      col = "red")
+
+X <- E1[,2]
+hist(X, freq = FALSE,
+     col="gray80",
+     border="gray20",
+     main = "Densitatea marginala f1,2", xlim=c(-1,1), ylim=c(0,0.6), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f12(x),
+      from = -1,
+      to = 1,
+      ylab = "",
+      main = "f1x2",
+      add = TRUE,
+      col = "red")
+```
+
+```{r}
+
+f1 <-  function(x1, x2){
+  if(abs(x2) <= 1){
+    return(exp(-1/2 *(x1^2/4 + x2^2)))
+  } 
+  else{
+    return(0)
+  }
+}
+f2 <- function(y1, y2){
+  return((((cos(y1))^2 + 1/2 * (sin(3*y2)))^2 * (cos(y1))^4) * exp(-0.5*(y1^2/4 + y2^2)))
+}
+
+g = function(x1, x2){
+
+  return(1/(4*pi)*exp(-1/2*(x1^2/4 +x2^2)))
+}
+
+
+
+
+
+simresp1 <-  function(n){
+  x <-  rep(0, n)
+  y <-  rep(0, n)
+  
+  for (i in 1:n){
+    
+    x[i] = rnorm(1, 0, 2)
+    y[i] = rnorm(1, 0, 1)
+    # generam uniforma
+    u = runif(1)
+    while(u > 1/(4*pi) * f1(x[i], y[i]) / g(x[i], y[i])){
+     x[i] = rnorm(1, 0, 2)
+     y[i] = rnorm(1, 0, 1)
+     u = runif(1)
+    }
+  }
+  cbind(x, y)
+}
+
+f1x1 <- function(x){
+  return(1/sqrt(8*pi)*exp(-x^2/8))
+}
+
+
+f1x2 <- function(y){
+  ifelse(abs(y) <= 1, 1/1.711249*exp(-y^2/2), 0)
+}
+
+rez <- simresp1(100000)
+X <- rez[,1]
+hist(X, freq = FALSE,
+     col="gray80",
+     border="gray20",
+     main = "Densitatea marginala f1,1", xlim=c(-10,10), ylim=c(0,0.25), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f1x1(x),
+      from = -10,
+      to = 10,
+      ylab = "",
+      main = "f1x1",
+      add = TRUE,
+      col = "red")
+
+X <- rez[,2]
+hist(X, freq = FALSE,
+     col="gray80",
+     border="gray20",
+     main = "Densitatea marginala f1,2", xlim=c(-1,1), ylim=c(0,0.6), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f1x2(x),
+      from = -1,
+      to = 1,
+      ylab = "",
+      main = "f1x2",
+      add = TRUE,
+      col = "red")
+
+simresp2 <-  function(n){
+  x <-  rep(0, n)
+  y <-  rep(0, n)
+  
+  for (i in 1:n){
+    
+    x[i] = runif(1, 0, 2)
+    y[i] = runif(1, 0, 1)
+    # generam uniforma
+    u = runif(1)
+    while(u > 1/(6*pi) * f2(x[i], y[i]) / g(x[i], y[i])){
+     x[i] = runif(1, 0, 2)
+     y[i] = runif(1, 0, 1) 
+     u = runif(1)
+    }
+  }
+  cbind(x, y)
+}
+
+
+```
+```{r}
+f1 <-  function(x1, x2){
+  if(abs(x2) <= 1){
+    return(exp(-1/2 *(x1^2/4 + x2^2)))
+  } 
+  else{
+    return(0)
+  }
+}
+
+```
+

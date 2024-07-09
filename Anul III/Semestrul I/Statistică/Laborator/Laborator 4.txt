@@ -1,0 +1,107 @@
+---
+title: "Lab 4"
+output: html_notebook
+---
+
+
+```{r}
+#declarari liste
+l1 <- vector(mode='list)
+
+l2 <- list(10,"Traian", 1:10, matrix(1:12,3,4))
+
+l2 <- list( Nota_ps = 10,
+            Nume: "Traian"
+            vector = 1:10
+            matrice = matrix(1:12,3,4))
+            
+l3 <- list( 10,
+            "Traian"
+            1:10
+            matrix(1:12,3,4))
+            
+names(l3)<-c("Nota_ps","Nume","vector","matrice")
+
+str(l2) #structura listei
+```
+Indexare a listelor
+```{r}
+v <- 1:10
+v[3]
+l2 <- list( Nota_ps = 10,
+            Nume: "Traian"
+            vector = 1:10
+            matrice = matrix(1:12,3,4))
+
+l2[1] #afis elementul 1 dar structura lui ramane tot de lista (deci in sine elementul extras e de dim 1)
+str(l2[1])
+
+l2[[1]] #afis elementul 1 dar strustura este cea a elementului (chr, vector etc.)
+
+l2$Prenume="Gigel" #adaugam la finalul listei pe Gigel
+l2[6,7]=c(8,9) #adaugam al 6-lea element in lista care este 8 si al 7-lea element care este 9
+
+l2[2] <-NULL #sterge elementul cu nr 2 din lista
+
+```
+
+Dataframe-ul
+```{r}
+#creare dataframe
+df <- data.frame(nume=c("Maria","Ionel","Ana"),
+           sex=c("F","M","F"),
+           nota_probabilitati=c(5,9,5),
+           varsta=c(21,22,20))
+
+str(df)
+view(df) #vizualizare ca tabel(V)
+
+df$sex #afis doar coloana unde e sexul
+
+df[1:2, 1:2] #afis ca o matrice de 2x2 portiunea din data.frame selectata adica, de la lin 1 la lin 2, col 1 la col 2
+
+data() #afis toate datele pe care le are R, adica numele fiecarui pachet de date - noi alegem mtcars
+
+mtcars$hp[1:7]
+
+#transmisie automata
+mean(mtcars$hp[mtcars$am == 0]) #mean = media
+rownames(mtcars[mtcars$mpg>25, ]) #numele masinilor care au consumul mai mare de 25
+
+#denumirile masinilor care au o greutate mai mare de 2t, putere mai mica de 200 cai putere si mai putin de 8 cilindri
+rowname(mtcars[(mtcars$cyl <= 8) & (mtcars$hp < 200) & (mtcars$wt >2)])
+
+#echivalent cu ce e mai sus
+df2 <- subset(x=mtcars,
+       subset=(cyl<8) & (hp<200) & (wt>2),
+       select=c(mpg, am, carb))
+rownames(df2)
+
+mtcars[order(mtcars$wt), ] #afis masinile ordonate crescator dupa greutate
+mtcars[order(mtcars$wt, decreasing = TRUE), ] #la fel ca mai sus dar descrescator - se poate ordona si dupa mai multe variabile cum ar fi wt, hp, mgp
+
+```
+
+```{r}
+# ?mtcars afiseaza atributele masinilor - wt, hp etc
+aggregate(mpg ~ cyl + am,
+          data=mtcars,
+          FUN=mean,
+          subset= carb <8)
+#?aggregate
+```
+```{r}
+?iris
+View(iris) #apare tabelul
+#data(iris)
+```
+```{r}
+?ggplot2::diamonds #afis prop diamantului in help
+dat <- ggplot2::diamonds #ggplot2 e o librarie, si din ea luam diamonds
+#library(ggplot2) #includem biblioteca ggplot2 (nu mai e nevoie sa luam doar diamonds din ea ca mai sus, aici avem deja inclus si diamonds)
+str(dat) #apar toate caracteristicile diamantului in consola
+
+aggregate(cbind(price,carat) ~ cut + clarity,
+          data=dat,
+          FUN=mean)
+```

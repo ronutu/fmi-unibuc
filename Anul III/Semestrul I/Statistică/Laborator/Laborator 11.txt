@@ -1,0 +1,74 @@
+# Ex 1
+
+a)Repartia 1/x^2
+
+```{r}
+sim_f<-function(n){
+  
+  u=runif(n)
+  x= 1/(1-u)
+  
+  return(x)
+}
+
+sim_f(10)
+
+#Histograma
+
+N<-10000
+x<-sim_f(N)
+
+hist(x,
+     probability=TRUE, #face o histograma de densitate, nu de frecvete
+     breaks=seq(0,max(x)+1,0.1), #diviziunea
+     xlim=c(0,10)) # x intre 0 si 10
+
+f<-function(x){
+  ifelse(x>=1, 1/x^2, 0) #functia mea pe ramuri
+}
+
+t<-seq(0,10,0.1)
+y<-f(t)
+
+lines(t,y,
+      col='red',
+      lwd=2)
+
+```
+
+
+b)Repartitia Weibull de parametrii alfa si beta
+
+```{r}
+
+sim_weib<-function(n,alpha=1,beta=1){
+  u<-runif(n)
+  x<-beta*(-log(u))^(1/alpha)
+  
+  return(x)
+}
+
+x<-sim_weib(10000,3,4)
+
+hist(x,
+     probability = TRUE,
+     breaks=seq(0,max(x)+1,0.1),
+     xlim=c(0,10))
+
+t<-seq(0,10,0.01)
+y<-dweibull(t,3,4)
+
+lines(t,y,
+      col='red',
+      lwd=2)
+
+```
+
+#Ex 2-Estimarea lui e
+```{r}
+n=100
+Tn=sum(runif(n))
+for(k in 1:n){
+  N=min(which(Tn[k]>1))
+}
+```

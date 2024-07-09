@@ -1,0 +1,595 @@
+---
+title: "Proiect - Statistică"
+subtitle: "Mihalcea Andrei, Morariu Medeea (Grupa 301)"
+output: html_document
+header-includes:
+   - \usepackage{bbm}
+   
+   
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Problema 1
+
+### Procedura 1
+
+#### Conditia ca lungimile celor 3 segmente sa poata forma triunghi
+
+Pentru implicația de la stânga la dreapta presupunem că $a,b,c$ pot forma un triunghi și demonstrăm că toate sunt mai mici decât $\dfrac{1}{2}$.
+Presupunem prin absurd că $a$ e mai mare decât $\frac{1}{2}$.
+
+Atunci $b+c=1-a\leq\dfrac{1}{2}\leq a$. Astfel este contrazisă inegalitatea triunghiului, deci presupunerea e falsă, de unde rezultă că $a,b,c < \dfrac{1}{2}$.
+
+Pentru implicația de la dreapta la stânga avem:$a+b=1-c>1-\dfrac{1}{2}=\dfrac{1}{2}>c$, deci $a+b>c$. Analog $a+c>b, b+c>a$. Prin urmare $a,b,c$ pot forma un triunghi.
+
+Pentru a traduce această condiție în funcție de variabilele aleatoare $X$ si $Y$, vom exprima lungimile în functie de punctele de taietură.
+Prima bucată va fi cea cuprinsă între capătul din stânga, cel de coordonată $0$ și coordonata cu valoarea mai mică dintre $X$ și $Y$. Prin urmare, lungimea sa va fi $\min{\left\lbrace X,Y\right\rbrace }$. A doua bucată va fi cea din mijloc, cuprinsă între tăietura efectuată în  coordonata $X$ și cea efectuată în coordonata $Y$, iar lungimea sa va fi $\left| X-Y\right|$. Ultima bucată va fi cea cuprinsă între tăietura de coordonată mai mare și capătul din dreapta, de coordonată 1. Lungimea sa va fi $1-\max{\left\lbrace X,Y\right\rbrace }$.
+
+Condiția se traduce astfel în: $\begin{cases} \min{\left\lbrace X,Y\right\rbrace }<\dfrac{1}{2}\\\left| X-Y\right| <\dfrac{1}{2}\\ \max{\left\lbrace X,Y\right\rbrace }>\frac{1}{2} \end{cases}$
+
+
+#### Valorile lunigmilor medii ale segmentelor
+
+Folosim următoarea funcție pentru a simula realizări independente ale cuplului (X, Y)
+
+
+
+```{r}
+
+procedura_1 <- function(N){
+  
+x <- runif(N)
+y <- runif(N)
+return(list(x, y))
+}
+
+
+```
+
+Evaluăm acum lungimile medii, cu ajutorul a 5000 de simulări
+
+```{r}
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+A <- c()
+B <- c()
+C <- c()
+for (i in 1:5000){
+  A <- c(A, min(x[i], y[i]))
+  B <- c(B, abs(x[i] - y[i])) #extragem in A, B si C valorile lungimilor segmentelor dupa formulele descrise la prima cerinta
+  C <- c(C, 1 - max(x[i], y[i]))
+}
+
+mean(A)
+mean(B)
+mean(C)
+
+```
+
+Prin rularea simulării obținem valori foarte apropiate de $\dfrac{1}{3}$ pentru fiecare dintre cele 3 lungimi medii. Acestu lucru se datorează Legii numerelor mari.
+
+Considerăm lungimea bucății din stânga $A=\min{\left\lbrace X,Y\right\rbrace }$ o nouă variabilă aleatoare. Atunci $x\leq A$ este echivalent cu $x\leq X$ și $x\leq Y$.
+
+$X$ și $Y$ sunt repartizate uniform, deci: $\mathbb{P}(x\leq X)=\mathbb{P}(x\leq Y)=1-x$. Cum $X,Y$ independente, rezultă că $\mathbb{P}(x\leq X,Y)=\left( 1-x\right) ^{2}$. Deci $\mathbb{P}(x\leq A)=\left( 1-x\right) ^{2}$, echivalent cu $\mathbb{P}(A\leq x)=1-\left( 1-x\right) ^{2}$. Funcția cumulativă a lui $A$ este $F_{A}\left( x\right)=1-\left( 1-x\right) ^{2}$, de unde  rezultă că densitatea lui $A$ este $f_{A}\left( x\right) =2-2x$. Deci $E\left[ A\right] =\int_{0}^{1}x\left( 2-2x\right) \,dx=\dfrac{1}{3}$. Luând un șir de variabile aleatoare identic ditribuite cu $A$, putem aplica Legea tare a numerelor mari și avem:$\dfrac{\sum_{i=1}^{N}A_i}{N}$ converge aproape sigur la $E\left[ A\right] =\dfrac{1}{3}$, atunci când $N$ tinde la $\infty$. În simularea noastră, N=5000 este un număr suficient de mare pentru a observa o valoare apropiată de $\dfrac{1}{3}$.
+
+Analog, putem arăta același rezultat pentru lungimea bucății din dreapta, $C=1-\max{\left\lbrace X,Y\right\rbrace  }$, iar lungimea medie a bucății din mijloc va rămâne $1-\dfrac{1}{3}-\dfrac{1}{3}=\dfrac{1}{3}$.
+
+
+#### Reprezentarea grafica, estimarea si calculul teoretic al probabilitatii
+
+Folosim următorul cod pentru realizarea graficului:
+
+```{r}
+
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+xt <- c()
+yt <- c() #in vectorii xt si yt vom salva valorile pentru care putem obtine triunghi
+
+xn <- c()
+yn <- c() #in acesti vectori salvam valorile pentru care nu se poate forma triunghi
+
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i])
+    yt <- c(yt, y[i])
+  }
+  else{
+    xn <- c(xn, x[i])
+    yn <- c(yn, y[i])
+  }
+    
+}
+
+plot(xt, yt, pch = 19, col = "blue", xlab = "x", ylab = "y", xlim = c(0,1), ylim = c(0,1), main = "Procedura 1")
+points(xn, yn, pch = 19, col = "red")
+
+
+```
+
+
+Putem estima probabilitatea căutată calculând raportul dintre numărul de perechi pentru care putem forma triunghi și numărul total de simulări efectuate:
+
+```{r}
+#3 b
+p <- length(xt) / 5000
+
+p
+```
+Acum vom prezenta determinarea matematică a acestei probabilități. Condiția necesară ca cele trei segmente să poată forma un triunghi se explicitează astfel:$\begin{cases}X<\dfrac{1}{2}\\Y>\dfrac{1}{2}\\Y-X<\dfrac{1}{2}\end{cases}$ sau $\begin{cases}X>\dfrac{1}{2}\\Y<\dfrac{1}{2}\\X-Y>\dfrac{1}{2}\end{cases}$.
+
+Având în vedere reprezentarea perechilor $\left( X,Y\right)$ ca puncte în pătratul unitate, putem exprima probabilitatea căutată ca un raport între aria regiunii determinate de ambele seturi de condiții și aria pătratului. Pătartul are aria 1, iar din primele două condiții ale fiecăruia, este clar că cele două regiuni nu se intersectează, deci le vom calcula și aduna ariile.
+
+Prima regiune este $\begin{cases}X<\dfrac{1}{2}\\Y>\dfrac{1}{2}\\Y<X+\dfrac{1}{2}\end{cases}$, iar aria sa este $$\int_{0}^{\frac{1}{2}}\int_{\frac{1}{2}}^{\frac{1}{2}+x}\,dy\,dx= \int_{0}^{\frac{1}{2}}\,xdx=\frac{1}{8}$$.
+
+A doua regiune este $\begin{cases}X>\dfrac{1}{2}\\Y<\dfrac{1}{2}\\X<Y+\dfrac{1}{2}\end{cases}$, cu aria $$\int_{0}^{\frac{1}{2}}\int_{\frac{1}{2}}^{\frac{1}{2}+y}\,dx\,dy=\int_{0}^{\frac{1}{2}}\,ydy=\frac{1}{8}$$.
+
+
+Prin urmare, aria totală este $\dfrac{1}{4}$, deci probabilitatea căutată este $\dfrac{\frac{1}{4}}{1} = \dfrac{1}{4}$.
+
+#### Probabilitatea de formare a unui triunghi obtuzunghic - cod
+
+```{r}
+L = procedura_1(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+
+xo <- c()
+yo <- c()
+
+xb <- c()
+yb <- c()
+for (i in 1:5000)
+{
+  v <- sort(c(min(x[i], y[i]), abs(x[i] - y[i]), 1 - max(x[i], y[i])))
+  a = v[1]
+  b = v[2]
+  c = v[3]
+  if(a<1/2 && b < 1/2 && c < 1/2 && (a^2 + b^2 - c^2) / (2 * a * b) < 0){
+    xo <- c(xo, x[i])
+    yo <- c(yo, y[i])
+  }
+  else{
+    xb <- c(xb, x[i])
+    yb <- c(yb, y[i])
+  }
+    
+}
+
+
+po <- length(xo)/5000
+print(po)
+```
+```{r}
+plot(main = "Triunghiuri obtuzunghice", xo, yo, pch = 19, col = "blue", xlab = "x", ylab = "y")
+points(xb, yb, pch = 19, col = "red")
+```
+
+
+### Procedura 2
+
+Vom folosi următoarea funcție pentru a simula procedura a doua:
+
+
+```{r}
+procedura_2 <- function(N){
+  
+x <- runif(N)
+z <- runif(N)
+y <- c()
+for (i in 1:N){
+  if (x[i] < 1/2){
+    y <- c(y, x[i] + (1-x[i])*z[i]) #ne folosim de z uniform pe [0,1] pentru a obtine y uniform pe [x, 1]
+  }
+  else{
+    y <- c(y, x[i]*z[i]) #ne folosim de z uniform pe [0,1] pentru a obtine y uniform pe [0, x]
+  }
+}
+
+return(list(x, y, z))
+}
+
+
+```
+
+
+Efectuăm acum 5000 de simulări:
+
+
+```{r}
+
+L = procedura_2(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+z = unlist(L[3])
+xt <- c()
+zt <- c()
+
+xn <- c()
+zn <- c()
+
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i]) #in xt si zt vom stoca valorile pentru care se poate forma triunghi
+    zt <- c(zt, z[i])
+  }
+  else{
+    xn <- c(xn, x[i]) #in xn si zn vom stoca valorile pentru care nu obtinem triunghi
+    zn <- c(zn, z[i])
+  }
+
+}
+```
+
+
+Acum, pentru a estima probabilitatea obținerii unui triunghi din lungimile celor trei segmente utilizând procedura 2, efectuăm raportul dintre numărul perechilor pentru care se poate forma triunghi și numărul total de simulări
+
+
+```{r}
+p = length(xt) / 5000
+p
+
+```
+
+Graficul cerut se poate trasa cu ajutorul următorului cod:
+
+
+```{r}
+plot(xt, zt, pch = 19, col = "blue", xlab = "x", ylab = "z", main = "Procedura 2")
+points(xn, zn, pch = 19, col = "red")
+
+```
+
+Acum vom determina matematic probabilitatea cerută. Pentru procedura 2, vrem să obținem $Y$ uniform repartizat pe segmentul mai lung. Fie $Z\sim U\left( \left[ 0,1\right] \right)$.
+
+Când $X<\dfrac{1}{2}$, segmentul mai lung este cel din drepta, cuprins între coordonatele $X$ și $1$, deci ne interesează să alegem $Y$ uniform pe segmentul $\left[ X,1\right]$. Luăm $Y=X+Z\left( 1-X\right) \sim U\left( \left[ X,1\right] \right)$. 
+
+Când $\dfrac{1}{2}\leq X$, segmentul mai lung este cel din stânga, cuprins între coordonatele $0$ și $X$, deci vrem $Y\sim U\left( \left[ 0,X\right] \right)$. Pentru aceasta, luăm $Y=ZX\sim U\left( \left[ 0,X\right] \right)$.
+
+Acum, analizăm condiția ca segmentele să formeze un triunghi. Se procedează exact ca în Procedura 1, calculând și adunând ariile determinate de fiecare set de condiții.
+
+Prima regiune este dată de: $\begin{cases}X<\dfrac{1}{2}\\Y>\dfrac{1}{2}\\Y<X+\dfrac{1}{2}\end{cases}$.
+
+Știm $X < \dfrac{1}{2} => Y=X+Z\left( 1-X\right)$, deci condițiile sunt echivalente cu $\begin{cases}X<\dfrac{1}{2}\\Z>\dfrac{1-2X}{2-2X}\\Z<\dfrac{1}{2-2X}\end{cases}$
+
+Aria regiunii este egală cu:
+$$\int_{0}^{\frac{1}{2}}\int_{\frac{1-2X}{2-2X}}^{\frac{1}{2-2X}}\,dz\,dx=-\dfrac{1}{2}-ln\left( \dfrac{1}{2}\right) +ln1=ln2-\dfrac{1}{2}$$.
+
+A doua regiune este dată de: $\begin{cases}X>\dfrac{1}{2}\\Y<\dfrac{1}{2}\\X<Y+\dfrac{1}{2}\end{cases}$.
+
+Știm $X > \frac{1}{2} =>Y=XZ$, deci condițiile sunt echivalente cu $\begin{cases}X>\dfrac{1}{2}\\Z<\dfrac{1}{2X}\\Z>\dfrac{2X-1}{2X}\end{cases}$.
+
+Aria regiunii este 
+$$\int_{\frac{1}{2}}^{1}\int_{\frac{2X-1}{2X}}^{\frac{1}{2X}}\,dz\,dx=ln2-\frac{1}{2}$$.
+
+Prin urmare, aria totală este $2ln2-1$, probabilitatea căutată fiind $\dfrac{2ln2-1}{1}\sim 0,386$.
+
+
+### Procedura 3
+
+Vom folosi următoarea funcție pentru a simula a treia procedură:
+
+```{r}
+procedura_3 <- function(N){
+  
+x <- runif(N)
+z <- runif(N)
+y <- c()
+for (i in 1:N){
+  if (z[i] < 1/2){
+    y <- c(y, x[i] + (1-x[i])*2*z[i])
+  }
+  else{
+    y <- c(y, x[i]*(2*z[i] - 1))  #am utilizat z pe post de moneda
+  }
+}
+return(list(x, y, z))
+}
+
+
+```
+
+Efectuăm acum 5000 de simulări:
+
+```{r}
+L = procedura_3(5000)
+x = unlist(L[1])
+y = unlist(L[2])
+z = unlist(L[3])
+xt <- c()
+zt <- c()
+
+xn <- c()
+zn <- c()
+for (i in 1:5000)
+{
+  if(min(x[i], y[i])<1/2 && abs(x[i] - y[i]) < 1/2 && max(x[i], y[i]) > 1/2){
+    xt <- c(xt, x[i])
+    zt <- c(zt, z[i])
+  }
+  else {
+    xn <- c(xn, x[i])
+    zn <- c(zn, z[i])
+  }
+
+}
+
+```
+
+
+Pentru a estima probabilitatea obținerii unui triunghi din lungimile celor trei segmente utilizând procedura 3, efectuăm raportul dintre numărul perechilor pentru care se poate forma triunghi și numărul total de simulări:
+
+```{r}
+p = length(xt) / 5000
+p
+
+```
+
+
+Graficul cerut se poate trasa cu ajutorul următorului cod:
+
+
+```{r}
+plot(xt, zt, pch = 19, col = "blue", xlab = "x", ylab = "z", xlim = c(0,1), ylim = c(0,1), main = "Procedura 3")
+points(xn, zn, pch = 19, col = "red")
+
+```
+
+Acum vom determina matematic probabilitatea cerută. Pentru procedura 3, avem nevoie de o monedă echilibrată, pe care o vom reda cu ajutorul unei variabile aleatoare $Z\sim U\left( \left[ 0,1\right] \right)$. Dacă $Z<\dfrac{1}{2}$, vom considera că am obținut pajură, iar dacă $\dfrac{1}{2}\leq Z$, am obținut cap.
+
+Prin urmare, dacă $Z<\dfrac{1}{2}$, vrem $Y$ uniform pe segemntul drept, între $X$ și $1$. Avem $0 < Z < \dfrac{1}{2} => 0<2Z<1$. Putem parametriza segmentul astfel: $Y=X+\left( 1-X\right) \left( 2Z\right) \sim U\left( \left[ X,1\right] \right)$.
+
+Dacă $\dfrac{1}{2}\leq Z$, vrem $Y$ uniform pe segmentul din stânga, între $0, X$. Cum $\dfrac{1}{2} \leq Z < 1 => 0 \leq 2Z - 1 <1$ deci parametrizăm segmentul astfel $Y=X\left( 2Z-1\right) \sim U\left( \left[ 0,X\right] \right]$.
+
+Utilizăm aceeași abordare ca la procedurile anterioare.
+
+Prima regiune este dată de $\begin{cases}X<\dfrac{1}{2}\\Y>\dfrac{1}{2}\\Y<X+\dfrac{1}{2}\end{cases}$.
+
+Cum $Y > \dfrac{1}{2}$, Y se situează pe segmentul din dreapta, însemnând că am obținut pajură și $Z < \dfrac{1}{2}$, deci $Y=X+\left( 1-X\right) \left( 2Z\right)$
+
+Condiția devine echivalentă cu $\begin{cases}X<\dfrac{1}{2}\\Z>\dfrac{1-2X}{4-4X}\\Z<\dfrac{1}{4-4X}\end{cases}$, deci aria sa este egală cu: $$\int_{0}^{\frac{1}{2}}\int_{\frac{1-2X}{4-4X}}^{\frac{1}{4-4X}}\,dz\,dx=\frac{ln2}{2}-\frac{1}{4}$$.
+
+A doua regiune este dată de: $\begin{cases}X>\dfrac{1}{2}\\Y<\dfrac{1}{2}\\X<Y+\dfrac{1}{2}\end{cases}$.
+
+Cum $Y < \dfrac{1}{2}$, acesta se situează pe segmentul din stânga, deci am obținut pajură, $Z \geq \dfrac{1}{2}$, iar $Y=X\left( 2Z-1\right)$.
+
+Condițiile devin echivalente cu $\begin{cases}X>\dfrac{1}{2}\\Z<\dfrac{2x+1}{4X}\\Z>\dfrac{4X-1}{4X}\end{cases}$, iar aria determinată este $$\int_{\frac{1}{2}}^{1}\int_{\frac{4X-1}{4X}}^{\frac{2X+1}{4X}}\,dz\,dx=\frac{ln2}{2}-\frac{1}{4}$$.
+
+Prin urmare, aria totală este $ln2-\dfrac{1}{2}$, probabilitatea căutată fiind $\dfrac{ln2-\dfrac{1}{2}}{1}\sim 0,193$.
+
+
+
+
+
+## Problema 2
+
+
+### Aplicarea algoritmului de acceptare - respingere pe $\tilde{f}$
+
+Știm $f=k\tilde{f}$, unde k e  număr real. Acum, fie densitatea $g$ pentru care există $c$ reală astfel încât
+		$$\tilde{f}\leq c g\Longleftrightarrow f\leq kc g := c^\prime g$$.
+
+Vom genera observații din densitatea $g$ și $u\sim U([0,1])$. Aplicând algoritmul de acceptare-respingere pentru funcția $\tilde{f}$, acceptăm  $x$ dacă 
+$$c g(x)u\leq \tilde{f}(x)\Longleftrightarrow c^\prime g(x)u\leq f(x)$$.
+
+$x$ e deci o observație bună și pentru repartiția $f$.
+
+Putem prin urmare să aplicăm metoda respingerii pe $\tilde{f}$ pentru a genera observații din $f$.
+
+### Determinarea lui $g$, $M1$ și $M2$
+
+
+Fie $X\sim N(0, 4)$, $Y\sim N(0,1)$ variabile aleatoare independente. Atunci, densitățile lor sunt $g_{X}\left( x\right) =\dfrac{e^{-\frac{x^2}{8}}}{2\sqrt{2\pi}}, g_{Y}\left( y\right) =\dfrac{e^{-\frac{y^2}{2}}}{\sqrt{2\pi}}$. Densitatea vectorului va fi produsul densităților, adică $g_{XY}\left( x,y\right) =\dfrac{e^{-\frac{x^2+8y^2}{8}}}{4\pi}$. Este clar că $\tilde{f_{1}}\left( x_{1},x_{2}\right) \leq 4\pi g_{XY}\left( x_{1},x_{2}\right)$, oricare ar fi $x_{1},x_{2}$ reale. Deci vom lua $M_{1}=4\pi$. Majorăm $cos^2\left( y_{1}\right)+\dfrac{sin^2\left( 3y_2\right) cos^4\left( y_1\right) }{2}\leq \dfrac{3}{2}$. De aici rezultă că $\tilde{f_2}\left( x_1,x_2\right) \leq 6\pi g_{XY}\left( x_1,x_2\right)$. Deci luăm $M_2=6\pi$.
+
+
+### Simulare din repartițiile $f1$ și $f2$
+
+Conform punctelor anterioare, putem proceda prin metoda respingerii aplicată funcțiilor $\tilde{f_1}$ și $\tilde{f_2}$.
+
+Le transpunem în R 
+
+```{r}
+f1 <-  function(x1, x2){
+  if(abs(x2) <= 1){
+    return(exp(-1/2 *(x1^2/4 + x2^2)))
+  } 
+  else{
+    return(0)
+  }
+}
+f2 <- function(y1, y2){
+  return((((cos(y1))^2 + 1/2 * (sin(3*y2)))^2 * (cos(y1))^4) * exp(-0.5*(y1^2/4 + y2^2)))
+}
+
+```
+
+
+Densitatea din care simulăm este $g$ determinat anterior:
+
+
+```{r}
+g = function(x1, x2){
+
+  return(1/(4*pi)*exp(-1/2*(x1^2/4 +x2^2)))
+}
+
+
+```
+
+
+Creăm funcții prin care aplicăm metoda respingerii, cu constantele determinate anterior:
+
+```{r}
+#pentru a genera din repartitia f1
+resp1 <-  function(n){
+  x <-  rep(0, n)
+  y <-  rep(0, n)
+  
+  for (i in 1:n){
+    
+    x[i] = rnorm(1, 0, 2)
+    y[i] = rnorm(1, 0, 1)
+    
+    u = runif(1)
+    while(u > 1/(4*pi) * f1(x[i], y[i]) / g(x[i], y[i])){
+     x[i] = rnorm(1, 0, 2)
+     y[i] = rnorm(1, 0, 1)
+     u = runif(1)
+    }
+  }
+  return(list(x, y))
+}
+
+#pentru a genera din repartitia f2
+
+resp2 <-  function(n){
+  x <-  rep(0, n)
+  y <-  rep(0, n)
+  
+  for (i in 1:n){
+    
+    x[i] = runif(1, 0, 2)
+    y[i] = runif(1, 0, 1)
+  
+    u = runif(1)
+    while(u > 1/(6*pi) * f2(x[i], y[i]) / g(x[i], y[i])){
+     x[i] = runif(1, 0, 2)
+     y[i] = runif(1, 0, 1) 
+     u = runif(1)
+    }
+  }
+  return(list(x, y))
+}
+
+E1 = resp1(100000)
+E2 = resp2(100000)
+
+
+```
+
+### Densitățile marginale
+
+Determinăm matematic densitățile marginale ale densității $f_1$:
+
+Știu că $\tilde{f_{1,1}}\left( x_1\right) =\int_{-\infty}^{\infty}\exp\left(- \frac{1}{2}\left( \frac{x_1^2}{2}+x_2^2\right) \right)1_{\left\lbrace \left| x_2\right|\leq 1 \right\rbrace} dx_2=\exp\left( -\frac{x_1^2}{8}\right)\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2$. 
+
+Fie $k_1$ real, cu $f_{1,1}=k_1\tilde{f_{1,1}}$. $f_{1,1}$ e densitate, deci $\int_{-\infty}^{\infty}f_{1,1}\left( x_1\right) dx_1=1$.
+
+În plus, $\int_{-\infty}^{\infty}f_{1,1}\left( x_1\right) dx_1=k_1\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2 \int_{-\infty}^{\infty}\exp\left( -\frac{x_1^2}{8}\right) dx_1=k_1\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2 \sqrt8\int_{-\infty}^{\infty}\exp\left( -t^2\right) dt$. Deci, $k_1=\dfrac{1}{2\sqrt{2\pi}\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2}$, obținem $f_{1,1}\left( x_1\right) =\dfrac{1}{2\sqrt{2\pi}}\exp\left( -\frac{x_1^2}{8}\right)$.
+
+Procedăm în mod analog pentru a determina 
+
+$f_{1,2} : \tilde{f_{1,2}}\left( x_2\right) =\int_{-\infty}^{\infty}\exp\left( -\frac{1}{2}\left( \frac{x_1^2}{4}+x_2^2\right) \right) 1_{\left\lbrace \left| x_2\right|\leq 1\right\rbrace  }dx_1 = \exp\left( -\frac{x_2^2}{2}\right)1_{\left\lbrace \left| x_2\right|\leq 1 \right\rbrace}\int_{-\infty}^{\infty}\exp\left( -\frac{x_1^2}{8}\right) dx_1=2\sqrt{2\pi}\exp\left( -\frac{x_2^2}{2}\right) 1_{\left\lbrace \left| x_2\right| \leq 1\right\rbrace }$.
+
+
+Fie $k_2$ real, cu $f_{1,2}=k_2\tilde{f_{1,2}}$. Atunci, $1=\int_{-\infty}^{\infty}f_{1,2}\left( x_2\right) dx_2=2k_2\sqrt{2\pi}\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2$, deci $k_2=\dfrac{1}{2\sqrt{2\pi}\int_{-1}^1\exp\left( -\frac{x_2^2}{2}\right) dx_2}$. Obținem $f_{1,2}\left( x_2\right) =\dfrac{\exp\left( -\frac{x_2^2}{2}\right) 1_{\left\lbrace \left| x_2\right| \leq 1\right\rbrace }}{\int_{-1}^{1}\exp\left( -\frac{x_2^2}{2}\right) dx_2}$.
+
+Pentru a le compara acum pe cele teoretice cu cele empirice, trasăm histogramele asociate lui $X_1$ și $X_2$.
+
+```{r}
+f11 <- function(x){
+  return(1/sqrt(8*pi)*exp(-x^2/8))
+}
+
+
+X <- unlist(E1[1])
+
+hist(X, freq = FALSE,
+     main = "Repartitia marginala a lui X1", xlim=c(-10,10), ylim=c(0,0.25), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f11(x),
+      from = -10,
+      to = 10,
+      ylab = "",
+      main = "f1x1",
+      add = TRUE,
+      col = "blue",
+      lwd = 3)
+legend("topright", expression(f[list(1,1)]),
+       col = "blue", lwd = 3)
+```
+
+
+
+```{r}
+f12 <- function(y){
+  ifelse(abs(y) <= 1, 1/1.711249*exp(-y^2/2), 0)
+}
+
+Y <- unlist(E1[2])
+
+
+hist(Y, freq = FALSE,
+     main = "Repartitia marginala a lui X2", xlim=c(-1,1), ylim=c(0,0.6), ylab = "",
+     xlab = "", breaks = 100)
+
+curve(expr = f12(x),
+      from = -1,
+      to = 1,
+      ylab = "",
+      main = "f1x2",
+      add = TRUE,
+      col = "blue",
+      lwd = 3)
+
+legend("topright", expression(f[list(1,2)]),
+       col = "blue", lwd = 3)
+```
+
+
+### Reprezentare 2D/3D
+
+
+```{r}
+repemp <- function(X, Y, part){
+  xcut <- cut(X, part[1])
+  ycut <- cut(Y, part[2]) #realizam diviziunea pe care vom trasa histograma empirica
+  
+  cn <- diff(range(X))/part[1] * diff(range(Y))/part[2] #constanta cu care normalizam histograma
+  
+  z <- table(xcut, ycut) / (length(X) * cn)
+
+  
+  x <- seq(min(X), max(X), length.out = part[1])
+  y <- seq(min(Y), max(Y), length.out = part[2])
+
+  
+  return(list(x = x, y = y, z = z))
+  
+}
+
+
+
+library(plot3D)
+
+reprez <- repemp(X, Y, c(50,50))
+
+
+
+
+
+hist3D(reprez$x, reprez$y, reprez$z, ticktype = "detailed",
+       ylim = c(-1, 1), cex.axis = 0.7,
+       xlab = "x1", ylab = "x2", zlab = "", main = "Repartitia empirica a lui X")
+
+
+
+
+```
+
+
+```{r}
+image2D(reprez$z, reprez$x, reprez$y, ylim = c(-1, 1), cex = 0.7)
+
+```
+
+

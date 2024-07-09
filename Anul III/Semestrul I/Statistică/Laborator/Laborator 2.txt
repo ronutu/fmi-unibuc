@@ -1,0 +1,185 @@
+---
+title: "Lab 2"
+subtitle: "Tipuri si structuri de date in R"
+author: F. Bobes
+output:
+  html_document: 
+    df_print: paged
+---
+
+#Tipuri de date in `R`
+
+Sunt 5 tupuri de date in R
+
+ - logical (TRUE si FALSE)
+ - characher
+ - numeric
+ - integer
+ - complex
+
+```{r}
+#inseram chunk cu ctrl+alt+i (mediu/bloc)
+#alt+- genereaza <- operatorul de atribuire
+#pentru executarea unei linii folosim ctrl+enter
+#pentru executarea intregului bloc folosim ctrl+shift+enter
+x <- "statistica"
+y <- "probabilitati"
+
+typeof(x) #tipul lui x
+class(x)
+
+a <- 2.7
+typeof(a) #verif daca a e data de tip double
+
+length(x)
+nchar(x) #arata nr de caractere ale lui x
+
+is.numeric(x) #verifica daca x e numeric, aici e false
+is.character(x) #true
+
+as.numeric(x) #tranforma x intr-o data de tip numeric, dar x fiind de tip caracter, nu se poate
+
+as.character(a) #am transformat a care e double in character
+as.logical(0) #tranforma pe 0 in data de tip logical, adica false
+as.logical(1) #tranforma pe 1 in data de tip logical, adica true
+
+b <- TRUE #asa transformam data de tip logical in alt tip de data
+
+as.numeric(b)
+as.character(b)
+
+as.logical(-3.6) #va da mereu true, cu exceptie pt 0, care va da false
+
+r <- 2+ 3i #nr complex
+typeof(r)
+
+z <- 1
+typeof(z) #verif daca z va fi double, adica 1.0000000000000
+
+z1 <- 1L
+typeof(z1) #verif daca z1 va fi integer, adica 1; pt a atribui un integer, se pune "L" dupa numar
+```
+# Structuri de date in R - sectiune
+ - vectori
+ - matrice si array
+ - liste
+ - data frame
+ - factori
+
+## Vectori si scalari - subsectiune
+Vectorii sunt structuri de date unidimensionale cu elemente de acelasi tip
+
+```{r}
+vector(length=20) #asa se creaza un vector - aici cream un vector cu 20 de elemente, cu elemente de timp logical
+a <- vector("numeric",length=10) #creaza vector cu 10 elemente de tip numeric
+b <- vector("character",length=100)
+
+numeric(5) #creaza un vector de tip numeric cu 5 elemente, toate 0
+character(6) # aici vor fi stringuri nule
+logical(3) #aici va pune de 3 ori true sau false
+integer(9) # aici sunt doar elem de tip integer, toate 0
+
+length(integer()) #nr de elemente ale vectorului cu element de tip integer, dar gol - lungimea va fi 0
+
+
+```
+
+Functia `c()`
+
+```{r}
+x <- c(1, 2, 7, 10, -1) #functia de concatenare - se poate folosi si pt crearea unui vector
+typeof(x)
+
+y <- c(TRUE, TRUE, FALSE) 
+
+c(x, 7) # concateneaza pe 7 la x, la sfarsitul lui x
+c(7, x) # concateneaza pe 7 la x, la inceputul lui x
+
+c(x[1:2], 5, x[3:5]) #am adaugat in mijlocul listrei elem 5 -am selctat din x elem 1 si 2, apoi punem x, si punem apoi elem 3 4 si 5
+
+?append #documentatia functiei append
+
+append(x, 5, 2) #permite adaugarea elementelor dupa o anumita pozitie data (pune pe 5 pe pozitia a 2-a in x)
+
+c(8.5, "Maria" ) # se face un vectir, unde tipul ambelor elemente va fi cel mai puternic, adica charcater
+c(TRUE, "Maria") #tot de tip character
+c(1, 4, TRUE) #pe true il face 1
+
+x2 <- c(3, 4, 6, 6, 10)
+c(x, x2) #concateneaza pe x2 la x, x fiind primul
+
+
+```
+Functia `rep()`
+
+```{r}
+rep(c(1, 2, 3), 5) #replica pe (1, 2, 3) de 5 ori
+rep(c(1, 2, 3), each=5) #pune pe 1 de 5 ori, pe 2 de 5 ori, pe 3 de 5 ori
+
+rep(c(1, 2, 3), times=c(2, 2, 4)) #repeta pe 1 de 2 ori, asa cum scrie in c de la times, pe 2 de 2 ori si pe 3 de 4 ori
+```
+
+Functia `seq`
+
+```{r}
+#vine de la sequence
+seq(1, 10, by = 1) #de la 1 la 10, cu pas de 1
+1:10 #echivalent cu seq(1, 10, by = 1)
+
+10:1 #in ordine descrescatoare
+
+seq(10, 1, by = -1) #de la 10 la 1 cu pas -1, adica descrescator; echivalent cu 10:1
+
+x <- seq(0, 1, length.out = 20) #imparte intervalul [0;1] in 20 de diviziuni echidistante
+y <- exp(x)
+
+plot(x, y, type="l") #face grafic, cu linia de tip linie continua; default e linie punctata
+
+x <- seq(0, 2*pi, length.out = 100)
+y <- sin(x)*cos(x)
+
+plot(x, y, type="l")
+```
+## Operatii cu vectori
+
+Operatii cu scalari
+```{r}
+
+a <-5
+b <- 1:10
+
+a + b #aduna 5 la fiecare elem al lui b
+a - b #scade 5 la fiecare elem al lui b
+a * b #inmulteste 5 la fiecare elem al lui b
+
+a ^ b # 5^1, 5^2...
+b ^ a # 1^5, 2^5... 
+```
+
+Operatii cu vectori (vectori cu vectori)
+
+ - vectori de aceeasi lungime
+ 
+```{r}
+a <- 1:10
+b <- 21:30
+
+a + b #aduna vectorii a si b componenta pe componenta
+a - b #la fel scaderea
+a * b #la fel inmultirea
+a / b #la fel impartirea
+a ^ b #la fel ridicarea la putere
+b %% a # 21 modulo 1, 22 modulo 2 etc
+```
+ 
+ - vectorii nu au aceeasi lungime
+ 
+```{r}
+
+a <- 1:3
+b <- 1:10
+
+a + b #vectorul mai mic il repeta pana la lungimea vectorului mai mare; ex: c(1,2,3,1,2,3,1,2,3) fiind a si apoi face a + b
+
+c(1, 2, 3, 1, 2, 3, 1, 2, 3, 1)+b
+```

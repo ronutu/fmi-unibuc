@@ -1,0 +1,71 @@
+---
+title: "Laborator 8"
+output: html_notebook
+```
+
+```{r}
+#Binomiala
+#P(X<3)
+pbinom(2,10,0.3)
+#echivalent
+sum(dbinom(0:2,10,10,0.3))
+
+#P(X>3)
+1-pbinom(3,10,0.3)
+
+#P(2<=x<7)=P(X=2) + P(X=3)+...+P(X=6)=P(X<=6) -P(X<=1)
+sum(dbinom(2:6,10,0.3))
+#echivalent
+pbinom(6,10,0.3) - pbinom(1,10,0.3)
+
+#P(x=par)
+sum(dbinom(seq(0,10,by=2),10,0.3))
+
+```
+
+```{r}
+#P(2<x<9)
+
+pnorm(9,3,sqrt(7))-pnorm(2,3,sqrt(7))
+
+#media si varianta empirica
+x <- rnorm(100,3,sqrt(7))
+
+xbar <- mean(x)
+Sn2 <- sum((x-xbar)^2)/(length(x)-1) #se imparte la n-1
+#echivalent cu ce e mai sus
+var(x)
+```
+
+```{r}
+f <- function(x){
+exp(x)*sin(2*x)*cos(2*x)}
+
+#Monte-Carlo
+N<-100000
+I_MC <-(1-0)*mean(f(runif(N))) #integrala pe [0,1] a lui f cu Monte Carlo
+I2_MN <- (7-3)*mean(f(runif(N,3,7))) #integrala pe [3,7] a lui f cu Monte Carlo
+
+#Integrare numerica
+In<-integrate(f,0,1) #integrala de la 0 la 1 din f
+In$value
+```
+
+$$
+I=\int_{0}^{\infty}\frac{x}{(1+x^2)^2}\,dx
+$$
+```{r}
+f2<-function(x){
+x/(1+x^2)^2
+}
+
+integrate(f2,0,Inf)
+
+g2<-function(y){
+f2(1/y-1)/y^2
+}
+
+N<-1000000
+
+I_Mc <- mean(g2(runif(N)))
+```
