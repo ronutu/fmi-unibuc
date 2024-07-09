@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:parola123@localhost:5432/nodejs"
+}
+
+model Restaurant {
+  id   String @id @default(uuid())
+  name String @unique
+
+  idPatron String
+  patron   Patron @relation(fields: [idPatron], references: [id], onDelete: Cascade)
+
+  idCity String
+  city   City   @relation(fields: [idCity], references: [id], onDelete: Cascade)
+
+  @@index([idCity])
+  @@index([idPatron])
+}
+
+model Patron {
+  id         String       @id @default(uuid())
+  name       String
+  age        Int
+  height     Int
+  weight     Int
+  restaurant Restaurant[] // @default({})
+}
+
+model City {
+  id          String @id @default(uuid())
+  name        String
+  nr_citizens Int
+  area        Int
+
+  restaurant Restaurant[]
+}
