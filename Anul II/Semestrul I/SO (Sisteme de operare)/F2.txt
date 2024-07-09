@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        printf("Utilizare: %s numar\n", argv[0]);
+        return 1;
+    }
+
+    int numar = atoi(argv[1]);
+    if (numar < 2) {
+        printf("%d nu este un numar prim\n", numar);
+        return 0;
+    }
+
+    for (int i = 2; i < numar; i++) {
+        if (numar % i == 0) {
+            printf("%d nu este un numar prim\n", numar);
+            return 0;
+        }
+    }
+
+    printf("%d este un numar prim\n", numar);
+    return 0;
+}
