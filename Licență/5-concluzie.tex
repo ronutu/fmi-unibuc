@@ -1,0 +1,62 @@
+\chapter{Concluzie}
+
+\section{Rezultate}
+
+Pentru a verifica eficiența soluției propuse, se măsoară trei aspecte: viteza de procesare, procentul de similaritate dintre manualul tipărit și manualul digital în forma inițială (așa cum este obținut din aplicația de automatizare), procentul de similaritate dintre varianta digitală inițială și varianta digitală finală (după ce a fost prelucrat astfel încât să corespundă în totalitate cu manualul tipărit).
+
+Testarea este efectuată pe un manual de 203 pagini. Aplicația de automatizare obține un timp de 354.8057 secunde sau 5.9314 minute, ceea ce înseamnă 1.747 de secunde pe pagină.
+
+Pentru a compara varianta tipărită cu varianta digitală inițială, se vor realiza etapele următoare: convertirea ambelor variante de manuale în text simplu, despărțirea textului în cuvinte, verficiarea numărului de șiruri de cuvinte care apar în ambele variante. 
+
+Pentru a realiza această comparație se va folosi următoarea formulă:
+
+\begin{center}
+	\[
+	\text{ratio} = 2.0 \cdot \frac{M}{T}
+	\]
+\end{center}
+
+
+\begin{itemize}
+	\item \( M \) este numărul de șiruri de cuvinte consecutive care apar în ambele manuale.
+	\item \( T \) este numărul total de cuvinte din cele două manuale.
+\end{itemize}
+
+Astfel, procentul de similaritate dintre variantă tipărită și varianta digitală produsă de aplicație este de 69,13\%. Din variantă tipărită a fost extras și textul care face parte din imagini, numărul paginilor, tabele. Aceste porțiuni de text nu au fost extrase și în varianta digitală deoarece ele vor fi înlocuite cu poze sau vor fi eliminate. Procentul practic de similaritate o să fie puțin mai ridicat.
+
+Procentul de similaritate dintre varianta inițială și varianta finală este de 72,35\%, iar procentul de similaritate dintre varianta finală a manualului digital și varianta tipărită este de 85,58\%. 
+
+
+\begin{table}[H]
+	\centering
+	\begin{tblr}{
+			cell{1}{1} = {c=3}{},
+			hlines,
+			vlines,
+		}
+		Procent de similaritate între manuale &            &            \\
+		$\mathrm{MD}_1$ vs $\mathrm{MT}$     & $\mathrm{MD}_1$ vs $\mathrm{MD}_2$ & $\mathrm{MD}_2$ vs $\mathrm{MT}$~ \\
+		69,13\%                               & 72,35\%    & 85,58\%    
+	\end{tblr}
+	\caption{Procent de similaritate între manualul tipărit, manualul digital inițial și manualul digital final}
+\end{table}
+
+
+\begin{itemize}
+	\item $\mathrm{MD}_1$ este manualul digital inițial, așa cum este generat de aplicația de automatizare.
+	\item $\mathrm{MD}_2$ este manualul digital în forma finală, după ce au fost realizate toate modificările necesare.
+	\item $\mathrm{MT}$ este manualul tipărit, în format PDF.
+\end{itemize}
+
+Scopul aplicației este de a automatiza un proces de conversie și de a economisi cât mai mult timp. Procentul de similaritate dintre manualul digital inițial și varianta finală a acestuia este de 72,35\%. Durata de procesare a aplicației este de aproximativ 6 minute. Pe lângă acest timp de execuție, este luat în considerare și timpul petrecut pentru realizarea completă a manualului digital (restul de 27,65\%), însemnând aproape 6 zile.
+
+Rezultatul final produs de aplicația de automatizare este timpul de conversie redus de la 3 săptămâni la aproximativ 6 zile.
+
+
+\section{Îmbunătățiri pentru viitor}
+
+În viitor, prioritatea principală este de a îmbunătăți procentajul de similaritate dintre versiunea inițială generată de aplicație și versiunea finală. Acest lucru poate fi realizat prin tratarea excepțiilor, cum ar fi segmente de text care nu sunt recunoscute de aplicație.
+
+O funcționalitate care poate fi implementată este recunoașterea formulelor de matematică și fizică din manualul PDF, utilizând OCR (Optical character recognition). Acest lucru va reduce considerabil timpul de creare al unui manual digital care conține orice tip de formule.
+
+De asemenea, paginile HTML pot fi formatate astfel încât să aibă aceeași strucutră ca în varianta tipărită. Acest lucru se poate realiza prin identificarea coordonatelor fiecărei porțiuni de text. Chiar dacă nu este o cerință prevăzută în caietul de sarcini dat de Minister, această opțiune va ajuta la consistența vizuală dintre varianta de tipar și cea digitală.
