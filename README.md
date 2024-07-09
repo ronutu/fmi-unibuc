@@ -45,7 +45,7 @@
 | 1  | Statistică  |
 | 2  | Ecuații cu derivate parțiale (EDP I)  |
 | 3  | Analiză numerică și metode numerice |
-| 4  | Cercetări operaționale  |
+| 4  | Cercetări operaționale (CO) |
 | 5  | Robotic Process automation (RPA)  |
 | 6  | Elemenete de analiză clasică (EAC I)  |
 
@@ -57,3 +57,4 @@
 | 3  | Elemente de securitate și logică aplicată (ESLA) |
 | 4  | Testarea sistemelor software (TSS)  |
 | 5  | Metode formale în ingineria software  |
+| 6  | Elemenete de analiză clasică (EAC II)  |
